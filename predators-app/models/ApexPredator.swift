@@ -6,13 +6,14 @@
 //
 
 import Foundation
+import SwiftUI
 
-struct ApexPredator: Decodable {
+struct ApexPredator: Decodable, Identifiable {
     let id: Int
     let name: String
-    let type: TypeEnum
+    let type: APType
     let latitude, longitude: Double
-    let movies: [Movie]
+    let movies: [String]
     let movieScenes: [MovieScene]
     let link: String
     
@@ -21,11 +22,17 @@ struct ApexPredator: Decodable {
         case movieScenes = "movie_scenes"
         case link
     }
+    
+    var image: String {
+        name.lowercased().replacingOccurrences(of: " ", with: "")
+    }
+    
+    
 }
 
 struct MovieScene: Decodable {
     let id: Int
-    let movie: Movie
+    let movie: String
     let sceneDescription: String
     
     enum CodingKeys: String, CodingKey {
@@ -34,17 +41,16 @@ struct MovieScene: Decodable {
     }
 }
 
-enum Movie: String, Decodable {
-    case jurassicPark = "Jurassic Park"
-    case jurassicParkIII = "Jurassic Park III"
-    case jurassicWorld = "Jurassic World"
-    case jurassicWorldDominion = "Jurassic World: Dominion"
-    case jurassicWorldFallenKingdom = "Jurassic World: Fallen Kingdom"
-    case theLostWorldJurassicPark = "The Lost World: Jurassic Park"
-}
-
-enum TypeEnum: String, Decodable {
-    case air = "air"
-    case land = "land"
-    case sea = "sea"
+enum APType: String, Decodable {
+    case land
+    case air
+    case sea
+    
+    var backgroundColor: Color {
+        switch self {
+            case .air: .teal
+            case .land: .brown
+            case .sea: .blue
+        }
+    }
 }
