@@ -1,9 +1,9 @@
-//
-//  ContentView.swift
-//  predators-app
-//
-//  Created by Julian González on 16/02/26.
-//
+    //
+    //  ContentView.swift
+    //  predators-app
+    //
+    //  Created by Julian González on 16/02/26.
+    //
 
 import SwiftUI
 
@@ -11,16 +11,13 @@ struct ContentView: View {
     
     let predator = Predators()
     
+    
     @State var searchText = ""
+    @State var alphabetical = false
     
     var filteredPredators: [ApexPredator] {
-        if searchText.isEmpty {
-            return predator.apexPredators
-        }else {
-            return predator.apexPredators.filter { predator in
-                predator.name.localizedStandardContains(searchText)
-            }
-        }
+        predator.sort(by: alphabetical)
+        return predator.search(for: searchText)
     }
     
     var body: some View {
@@ -52,6 +49,18 @@ struct ContentView: View {
             .searchable(text: $searchText)
             .autocorrectionDisabled()
             .animation(.default, value: searchText)
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    Button {
+                        withAnimation {
+                            alphabetical.toggle()
+                        }
+                    }label: {
+                        Image(systemName: alphabetical ? "film" : "textformat")
+                            .symbolEffect(.bounce, value: alphabetical)
+                    }
+                }
+            }
         }
     }
 }
