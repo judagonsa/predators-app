@@ -8,6 +8,7 @@
 import Foundation
 
 class Predators {
+    var allApexPredators: [ApexPredator] = []
     var apexPredators: [ApexPredator] = []
     
     init() {
@@ -18,8 +19,8 @@ class Predators {
         if let url = Bundle.main.url(forResource: "jpapexpredators", withExtension: "json") {
             do {
                 let data = try Data(contentsOf: url)
-                let apexPredators = try JSONDecoder().decode([ApexPredator].self, from: data)
-                self.apexPredators = apexPredators
+                self.allApexPredators = try JSONDecoder().decode([ApexPredator].self, from: data)
+                self.apexPredators = self.allApexPredators
             } catch {
                 print("Error parsing apex predators \(error)")
             }
@@ -43,6 +44,16 @@ class Predators {
                 predator1.name < predator2.name
             } else {
                 predator1.id < predator2.id
+            }
+        }
+    }
+    
+    func filter(by type: APType) {
+        if type == .all {
+            apexPredators = allApexPredators
+        } else {
+            apexPredators = allApexPredators.filter { predator in
+                predator.type == type
             }
         }
     }

@@ -14,8 +14,10 @@ struct ContentView: View {
     
     @State var searchText = ""
     @State var alphabetical = false
+    @State var typeSelection: APType = .all
     
     var filteredPredators: [ApexPredator] {
+        predator.filter(by: typeSelection)
         predator.sort(by: alphabetical)
         return predator.search(for: searchText)
     }
@@ -58,6 +60,22 @@ struct ContentView: View {
                     }label: {
                         Image(systemName: alphabetical ? "film" : "textformat")
                             .symbolEffect(.bounce, value: alphabetical)
+                    }
+                }
+                
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu {
+                        Picker("filter", selection: $typeSelection.animation()) {
+                            ForEach(APType.allCases) { type in
+                                Label {
+                                    Text(type.rawValue)
+                                } icon: {
+                                    Image(systemName: type.icon)
+                                }
+                            }
+                        }
+                    }label: {
+                        Image(systemName: "slider.horizontal.3")
                     }
                 }
             }
