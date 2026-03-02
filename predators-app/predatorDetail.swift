@@ -18,6 +18,14 @@ struct PredatorDetail: View {
                     Image(predator.type.rawValue)
                         .resizable()
                         .scaledToFit()
+                        .overlay{
+                            LinearGradient(
+                                stops: [Gradient.Stop(color: .clear, location: 0.8),
+                                        Gradient.Stop(color: .black, location: 1)],
+                                startPoint: .top,
+                                endPoint: .bottom
+                            )
+                        }
                     
                     Image(predator.image)
                         .resizable()
@@ -28,7 +36,6 @@ struct PredatorDetail: View {
                         .offset(y: 20)
                 }
                 
-                    //name
                 VStack(alignment: .leading) {
                     Text(predator.name)
                         .font(.largeTitle)
@@ -68,15 +75,7 @@ struct PredatorDetail: View {
                 .padding(.horizontal)
                 .padding(.bottom, 30)
                 .frame(width: geo.size.width, alignment: .leading)
-                
-                
-                    //location
-                
-                    //appears
-                
-                    //movie moments
-                
-                    //webpage
+
             }
         }
         .ignoresSafeArea()
@@ -86,4 +85,5 @@ struct PredatorDetail: View {
 
 #Preview {
     PredatorDetail(predator: Predators().apexPredators[0])
+        .preferredColorScheme(.dark)
 }
