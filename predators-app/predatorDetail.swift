@@ -6,10 +6,12 @@
     //
 
 import SwiftUI
+import MapKit
 
 struct PredatorDetail: View {
     
-    @State var predator: ApexPredator
+    let predator: ApexPredator
+    @State var position: MapCameraPosition
     
     var body: some View {
         GeometryReader { geo in
@@ -40,9 +42,24 @@ struct PredatorDetail: View {
                     Text(predator.name)
                         .font(.largeTitle)
                     
+                    NavigationLink {
+                        
+                    } label: {
+                        Map(position: $position){
+                            Annotation(predator.name, coordinate: predator.location){
+                                Image(systemName: "mappin.and.ellipse")
+                                    .font(.largeTitle)
+                                    .imageScale(.large)
+                                    .symbolEffect(.pulse)
+                            }
+                        }
+                        .frame(height: 125)
+                        .clipShape(.rect(cornerRadius: 10))
+                    }
+                    
                     Text("Appears in:")
                         .font(.title2)
-                        .padding(.top, 5)
+                        .padding(.top, 10)
                     
                     ForEach(predator.movies, id:\.self) { movie in
                         Text("• " + movie)
@@ -79,11 +96,17 @@ struct PredatorDetail: View {
             }
         }
         .ignoresSafeArea()
+        .toolbarBackground(.automatic)
         
     }
 }
 
 #Preview {
-    PredatorDetail(predator: Predators().apexPredators[0])
+    
+    let predator = Predators().apexPredators[0]
+    PredatorDetail(
+        predator: predator,
+        position: .camera(MapCamera(centerCoordinate: predator.location, distance: 3000))
+    )
         .preferredColorScheme(.dark)
 }
