@@ -13,6 +13,8 @@ struct PredatorDetail: View {
     let predator: ApexPredator
     @State var position: MapCameraPosition
     
+    @Namespace var nameEspace
+    
     var body: some View {
         GeometryReader { geo in
             ScrollView {
@@ -43,7 +45,15 @@ struct PredatorDetail: View {
                         .font(.largeTitle)
                     
                     NavigationLink {
-                        
+                        PredatorMap(position: .camera(
+                            MapCamera(
+                                centerCoordinate: predator.location,
+                                distance: 1000,
+                                heading: 250,
+                                pitch: 80
+                            )
+                        ))
+                        .navigationTransition(.zoom(sourceID: 1, in: nameEspace))
                     } label: {
                         Map(position: $position){
                             Annotation(predator.name, coordinate: predator.location){
@@ -56,6 +66,7 @@ struct PredatorDetail: View {
                         .frame(height: 125)
                         .clipShape(.rect(cornerRadius: 10))
                     }
+                    .matchedTransitionSource(id: 1, in: nameEspace)
                     
                     Text("Appears in:")
                         .font(.title2)
@@ -103,7 +114,7 @@ struct PredatorDetail: View {
 
 #Preview {
     
-    let predator = Predators().apexPredators[0]
+    let predator = Predators().apexPredators[1]
     PredatorDetail(
         predator: predator,
         position: .camera(MapCamera(centerCoordinate: predator.location, distance: 3000))
